@@ -4,7 +4,7 @@ This is a data base contains based on
 BLA BLA 
 contains snow depth observations pulic access from : 
 
-* DWD : URL1
+* DWD : https://cdc.dwd.de/portal/
 * CHMI : URL2
 
 ## Installation 
