@@ -12,15 +12,22 @@ library(dplyr)
 library(purrr)
 library(stringr)
 library(sf)
-library(cluster)
+library(reshape2)
+##
+project_dir <- '/home/ecor/activity/2021/local/SuSnowDB/'
+if ((project_dir %>% str_sub(-1,-1))=="/") project_dir <- project_dir %>% str_sub(1,-2)
 
-snow_path <- '/home/ecor/activity/2021/local/SuSnowDB/data/chmi/'
-###snow_path <- '/home/ecor/activity/2021/local/csv/snow2/'
+chmi_snow_path <- project_dir %>% paste0('/data/chmi/')
+dwd_snow_path <-  project_dir %>% paste0('/data/dwd/')
+
+
+## CHMI DATA
 regions <- c("chmi_pilsen","chmi_southern_bohemia") 
 regions_iso_3166_2 <- c("CZ-PL","CZ-JC") ###"CZ-PL or CZ-CZ-JC" <- c("chmi_pilsen","chmi_southern_bohemia") 
 names(regions) <- regions
 names(regions_iso_3166_2) <- regions
-zips <- regions %>% sprintf(fmt=paste(snow_path,"%s",sep="/"))  %>% map(list.files,full.name=TRUE,pattern="_SCE_N.csv.zip")
+## zip filess were already downloaded
+zips <- regions %>% sprintf(fmt=paste(chmi_snow_path,"%s",sep="/"))  %>% map(list.files,full.name=TRUE,pattern="_SCE_N.csv.zip")
 
 names(zips) <- regions
 
@@ -33,7 +40,6 @@ exdir <- tempdir()
 data <- NULL ##list()
 metadata <- NULL
 metadata_l <- list()
-
 
 for (region in regions) {
   print(region)
@@ -233,6 +239,7 @@ locations$location_code0 <- locations$location_code %>% sprintf(fmt=location_cod
 locations$city_name <- as.character(NA)
 locations$country_name <- "Czech Republic"
 locations$country_code_ISO_3166_1 <- "CZ"
+locations$use_limitations <- "https://www.chmi.cz/files/portal/docs/meteo/ok/open_data/Podminky_uziti_udaju.pdf"
 ###locations$country_code_ISO_3166_2 <- metadata1$region_iso_3166_2
 ####
 ###
@@ -280,7 +287,6 @@ names(measurements)[names(measurements)=="Station_ID"] <- "location_code0"
 measurements$variable_code0 <- measurement_types$variable_code0[1]
 measurements$location_code0 <- data$Station_ID %>% sprintf(fmt=location_code0_prefix)
 measurements$description <- as.character(NA)
-
 #### ADD DATA DWD 
 library(rdwd)  
 data(geoIndex)  
@@ -318,7 +324,7 @@ locations_bavaria_snow$location_source <- "DWD"
 locations_bavaria_snow$country_name <- "Germany"
 locations_bavaria_snow$country_code_ISO_3166_1 <- "DE"
 locations_bavaria_snow$country_code_ISO_3166_2 <- "DE-BY"
-locations_bavaria_snow$terms_of_use <- "https://opendata.dwd.de/climate_environment/CDC/Terms_of_use.pdf"
+locations_bavaria_snow$use_limitations <- "https://opendata.dwd.de/climate_environment/CDC/Terms_of_use.pdf"
 locations <- rbind(locations,locations_bavaria_snow[,names(locations)])
 
 
@@ -375,65 +381,46 @@ names(measurements)[names(measurements)=="WAAS_6"] <- "sampled_swe_mm"
 # WAAS_6 Wasseräquivalent ausgestochene Schneehöhe mm
 # eor Ende data record
 # Fehlwerte sind mit -999 gekennzeichnet.
-
+# 
+# "1- only formal control during decoding and import
+# 2- controlled with individually defined criteria
+# 3- ROUTINE control with QUALIMET and QCSY
+# 5- historic, subjective procedures
+# 7- ROUTINE control, not yet corrected
+# 8- quality control outside ROUTINE
+# 9- ROUTINE control, not all parameters corrected
+# 10- ROUTINE control finished, respective corrections
+# finished"
 
 ### ADD MEASURWNT TYPES
 measurement_types$measurement_time_interval <- "daily"
 ## c("sub-daily","hourly","continuous")
-measurements_bavaria <- dwd_mes2 %>% select(-eor) %>% melt(id=c("location_code0","timestamptz","flag"),na.rm=TRUE)
-measurements_bavaria$description <- ""
-"https://opendata.dwd.de/climate_environment/CDC/Terms_of_use.pdf"
+measurements_bavaria <- dwd_mes2 %>% select(-eor) %>% melt(id=c("location_code0","timestamptz","flag"),na.rm=FALSE)
+measurements_bavaria$description <- "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/water_equiv/historical/BESCHREIBUNG_obsgermany_climate_daily_water_equiv_historical_de.pdf"
 names(measurements_bavaria)[names(measurements_bavaria)=="variable"] <- "variable_code0"
+measurements_bavaria <- measurements_bavaria[,names(measurements)]
+##
+##
+measurements <- rbind(measurements,measurements_bavaria) %>% as_tibble()
 ###
 stop("HERE2")
-mesurements_bavaria2 <- dwd_mes2 %>% select(-eor) %>% melt(id=c("location_code0","timestamptz","flag"),na.rm=TRUE)
-
-variables <- unique(measurements_bavaria)
-
-1- only formal control during decoding and import
-2- controlled with individually defined criteria
-3- ROUTINE control with QUALIMET and QCSY
-5- historic, subjective procedures
-7- ROUTINE control, not yet corrected
-8- quality control outside ROUTINE
-9- ROUTINE control, not all parameters corrected
-10- ROUTINE control finished, respective corrections
-finished
-
-stop("HERRE")
-###
-#####zzvs <- selectDWD(locations_bavaria$name,res="daily",var="water_equiv",per="historical") %>% unlist()
-
-###
-##%>% st_crop(elevation)
-##locations_bavaria_bf$icell <- cellFromXY(elevation,as_Spatial(locations_bavaria_bf))
-###germany <- getData('GADM', country='DEU', level=1,path=dir_gadm) %>% as("sf")
-
-
-##locations_bavaria_bf$zipfile <- selectDWD(locations_bavaria_bf$name,res="daily",var="water_equiv",per="historical") %>% unlist()
-###
-##uu <- "ftp://opendata.dwd.de/climate_environment/CDC/observations_germany/climate"
-locations_bavaria_bf$zipfile[locations_bavaria_bf$zipfile==uu] <- NA
-locations_bavaria_bf <- locations_bavaria_bf %>% filter(!is.na(locations_bavaria_bf$zipfile))
-obsDWD <- dataDWD(locations_bavaria_bf$zipfile,dir=dir) %>% do.call(what="rbind")
-###
-names(obsDWD)[names(obsDWD)=="MESS_DATUM"] <- "Date"
-obsDWD$SnowDepthMapFile <- obsDWD$SH_TAG*10
-obsDWD$SWEMapFile <- obsDWD$WASH_6
-
-
-
-
-
-
-
-
-stop("HERE")
-
+stop("FFFF")
+dbname = "hydroclimatedb_ver03"
+###if (!require(dbplyr)) install.packages("dbplyr")
+localdb <- src_postgres(dbname = dbname)
+####https://www.r-bloggers.com/2016/02/using-postgresql-in-r-a-quick-how-to/
 library(RPostgreSQL) 
-dbname = "hydroclimatedb_ver02"
+dbname = "hydroclimatedb_ver03"
+###user = "ecor"
+
+##https://www.r-bloggers.com/2016/02/using-postgresql-in-r-a-quick-how-to/
+###https://github.com/tidyverse/dplyr/issues/3026
+
 conn = dbConnect(PostgreSQL(), dbname = dbname) ##, user = dbname) 
+help("dbSendQuery")
 ###meuse = st_read(conn, "meuse")
 ##meuse_1_3 = st_read(conn, query = "select * from meuse limit 3;")
-st_write(locations,conn,"locations")
+st_write(locations,conn,"locations",append=TRUE)
+dbWriteTable(conn=conn,name="measurement_types",value=measurement_types,append=TRUE)
+dbWriteTable(conn=conn,name="measurements",value=measurements,append=TRUE)
 dbDisconnect(conn) 
