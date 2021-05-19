@@ -15,6 +15,9 @@ library(sf)
 library(reshape2)
 ##
 project_dir <- '/home/ecor/activity/2021/local/SuSnowDB/'
+snow_sumava_data <- function(project_dir,data_dir=NULL) { 
+  
+  ## DA COMPLETARE ... 
 if ((project_dir %>% str_sub(-1,-1))=="/") project_dir <- project_dir %>% str_sub(1,-2)
 
 chmi_snow_path <- project_dir %>% paste0('/data/chmi/')
@@ -403,6 +406,9 @@ measurements_bavaria <- measurements_bavaria[,names(measurements)]
 ##
 measurements <- rbind(measurements,measurements_bavaria) %>% as_tibble()
 ###
+return(list(locations=locations,measurement_types=measurement_types,measurements=measurements))
+}
+
 stop("HERE2")
 stop("FFFF")
 dbname = "hydroclimatedb_ver03"
