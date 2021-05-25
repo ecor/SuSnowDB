@@ -30,6 +30,7 @@ NULL
 #' @importFrom rlang .data
 #' @importFrom reshape2 melt
 #'
+#'@export
 #'@examples
 #'  data_dir <- system.file("snow_extdata",package="SuSnowDB")
 #'  \dontrun{
@@ -243,7 +244,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   #   location_name TEXT,
   #   city_name TEXT,
   #   country_name TEXT,
-  #   country_code_ISO_3166 TEXT NOT NULL,
+  #   country_code_iso_3166 TEXT NOT NULL,
   #   description TEXT,
   #   geometry geometry,
   #   UNIQUE(location_code0)
@@ -255,16 +256,16 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   names(locations)[names(locations)=="Station_name"] <- "location_name"  
   names(locations)[names(locations)=="source"] <- "location_source"  
   names(locations)[names(locations)=="Note"] <- "description"
-  names(locations)[names(locations)=="URL"] <- "location_URL"
-  names(locations)[names(locations)=="region_iso_3166_2"] <- "country_code_ISO_3166_2"
+  names(locations)[names(locations)=="URL"] <- "location_url"
+  names(locations)[names(locations)=="region_iso_3166_2"] <- "country_code_iso_3166_2"
   names(locations)[names(locations)=="Altitude"] <- "altitude"
   location_code0_prefix <- "CZ_CHMI_SNOW_%s"
   locations$location_code0 <- locations$location_code %>% sprintf(fmt=location_code0_prefix)
   locations$city_name <- as.character(NA)
   locations$country_name <- "Czech Republic"
-  locations$country_code_ISO_3166_1 <- "CZ"
+  locations$country_code_iso_3166_1 <- "CZ"
   locations$use_limitations <- "https://www.chmi.cz/files/portal/docs/meteo/ok/open_data/Podminky_uziti_udaju.pdf"
-  ###locations$country_code_ISO_3166_2 <- metadata1$region_iso_3166_2
+  ###locations$country_code_iso_3166_2 <- metadata1$region_iso_3166_2
   ####
   ###
   nn1 <- c("location_code","location_code0","location_name")
@@ -294,7 +295,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   ### MEASUREMENTS 
   # 
   # CREATE TABLE IF NOT EXISTS measurements (
-  #   time TIMESTAMPTZ NOT NULL,
+  #   time time NOT NULL,
   #   variable_code0 TEXT REFERENCES measurement_types(variable_code0),
   #   location_code0 TEXT REFERENCES locations(location_code0),
   #   value FLOAT,
@@ -306,7 +307,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   measurements <- data
   
   ###
-  names(measurements)[names(measurements)=="time"] <- "timestamptz"
+  names(measurements)[names(measurements)=="time"] <- "time"
   names(measurements)[names(measurements)=="Station_ID"] <- "location_code0"
   measurements$variable_code0 <- measurement_types$variable_code0[1]
   measurements$location_code0 <- data$Station_ID %>% sprintf(fmt=location_code0_prefix)
@@ -327,9 +328,10 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   
   
   crs <- 4326
-  geoIndex <- geoIndex  %>% filter(.data[["state"]]=="Bayern")
+  geoIndex <- geoIndex  %>% filter(.data[["state"]]=="Bayern") %>% filter(!duplicated(.data[["id"]])) ## remova possible duplicated ids (errors)
   geometry  <- geoIndex  %>% dplyr::select(.data[["lon"]],.data[["lat"]]) %>% t() %>% as.data.frame() %>% as.list() %>% lapply(st_point) %>% st_sfc()
   locations_bavaria <- st_sf(geoIndex,geometry=geometry,crs=crs)## %>% st_transform(crs=st_crs(elevation))
+  
   
   
   locations_bavaria$zipfile <- selectDWD(locations_bavaria$name,res="daily",var="water_equiv",per="historical") %>% unlist()
@@ -339,36 +341,36 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   names(locations_bavaria_snow)[names(locations_bavaria_snow)=="name"] <- "location_name"
   names(locations_bavaria_snow)[names(locations_bavaria_snow)=="id"] <- "location_code"
   names(locations_bavaria_snow)[names(locations_bavaria_snow)=="display"] <- "description"
-  names(locations_bavaria_snow)[names(locations_bavaria_snow)=="zipfile"] <- "location_URL"
+  names(locations_bavaria_snow)[names(locations_bavaria_snow)=="zipfile"] <- "location_url"
   names(locations_bavaria_snow)[names(locations_bavaria_snow)=="ele"] <- "altitude"
   location_bavaria_code0_prefix <- "DE_DWD_SNOW_%05d"
   locations_bavaria_snow$location_code0 <- locations_bavaria_snow$location_code %>% sprintf(fmt=location_bavaria_code0_prefix)
   locations_bavaria_snow$city_name <- as.character(NA)
   locations_bavaria_snow$location_source <- "DWD"
   locations_bavaria_snow$country_name <- "Germany"
-  locations_bavaria_snow$country_code_ISO_3166_1 <- "DE"
-  locations_bavaria_snow$country_code_ISO_3166_2 <- "DE-BY"
+  locations_bavaria_snow$country_code_iso_3166_1 <- "DE"
+  locations_bavaria_snow$country_code_iso_3166_2 <- "DE-BY"
   locations_bavaria_snow$use_limitations <- "https://opendata.dwd.de/climate_environment/CDC/Terms_of_use.pdf"
   locations <- rbind(locations,locations_bavaria_snow[,names(locations)])
+ 
   
   
-  
-  layer <- "country_code_ISO_3166_2"
+  layer <- "country_code_iso_3166_2"
   ## mapview::mapview(locations, zcol = layer, col.regions=rainbow(3))
   
   ## Getting DWD data values 
   ##
   ## if errors: type > rdwd::updateRdwd()
-  dwd_mes0 <- locations %>% filter(.data[["country_code_ISO_3166_2"]]=="DE-BY") %>% select(.data[["location_URL"]]) %>% extract2(1) 
+  dwd_mes0 <- locations %>% filter(.data[["country_code_iso_3166_2"]]=="DE-BY") %>% select(.data[["location_url"]]) %>% extract2(1) 
   dwd_mes1 <- dwd_mes0 %>% dataDWD(dir=dir,read=TRUE) ###
   dwd_mes2 <- dwd_mes1 %>% do.call(what="rbind")
   names(dwd_mes2)[names(dwd_mes2)=="STATIONS_ID"] <- "location_code0"
-  names(dwd_mes2)[names(dwd_mes2)=="MESS_DATUM"] <- "timestamptz"
+  names(dwd_mes2)[names(dwd_mes2)=="MESS_DATUM"] <- "time"
   names(dwd_mes2)[names(dwd_mes2)=="QN_6"] <- "flag"
   dwd_mes2$flag <-  paste0("QN_6=",dwd_mes2$flag)
   dwd_mes2$location_code0 <- dwd_mes2$location_code0 %>% sprintf(fmt=location_bavaria_code0_prefix) 
   
-  ids <- c("location_code0","timestamptz","flag")
+  ids <- c("location_code0","time","flag")
   vars <- names(dwd_mes2)[!(names(dwd_mes2) %in% ids)]
   ##>>>"ASH_6"  "SH_TAG" "WASH_6" "WAAS_6" "eor"  
   measurement_types$description[measurement_types$variable_code0=="snow_depth_cm"] <- measurement_types$description[measurement_types$variable_code0=="snow_depth_cm"] %>% sprintf(fmt="%s code_DWD=%s","SH_TAG")
@@ -377,7 +379,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   measurement_types[nrow(measurement_types)+1,] <- c(variable_code0="swe_mm",variable="snow water equivalent",unit="mm",description="snow water equivalent DWD=WASH_6")[names(measurement_types)]
   names(dwd_mes2)[names(dwd_mes2)=="WASH_6"] <- "swe_mm"
   ##"ASH_6"  "WAAS_6" 
-  measurement_types[nrow(measurement_types)+1,] <- c(variable_code0="snow_depth_cm",variable="height of snow pack sample",unit="cm",description="sheight of snow pack sample DWD=ASH_6")[names(measurement_types)]
+  measurement_types[nrow(measurement_types)+1,] <- c(variable_code0="snow_depth_sample_cm",variable="height of snow pack sample",unit="cm",description="height of snow pack sample DWD=ASH_6")[names(measurement_types)]
   names(dwd_mes2)[names(dwd_mes2)=="ASH_6"] <- "snow_depth_sample_cm"
   
   measurement_types[nrow(measurement_types)+1,] <- c(variable_code0="sampled_swe_mm",variable="sampled snow pack water equivalent",unit="mm",description="sampled snow pack water equivalent DWD=WAAS_6")[names(measurement_types)]
@@ -419,7 +421,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   ### ADD MEASURWNT TYPES
   measurement_types$measurement_time_interval <- "daily"
   ## c("sub-daily","hourly","continuous")
-  measurements_bavaria <- dwd_mes2 %>% select(-.data[["eor"]]) %>% melt(id=c("location_code0","timestamptz","flag"),na.rm=FALSE)
+  measurements_bavaria <- dwd_mes2 %>% select(-.data[["eor"]]) %>% melt(id=c("location_code0","time","flag"),na.rm=FALSE)
   measurements_bavaria$description <- "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/water_equiv/historical/BESCHREIBUNG_obsgermany_climate_daily_water_equiv_historical_de.pdf"
   names(measurements_bavaria)[names(measurements_bavaria)=="variable"] <- "variable_code0"
   measurements_bavaria <- measurements_bavaria[,names(measurements)]
