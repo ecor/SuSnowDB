@@ -9,3 +9,4 @@ conn = dbConnect(PostgreSQL(), dbname = dbname)
 ## Create a new DB layout
 write_dataset_into_ssdb(conn,val,new=TRUE)
 dbDisconnect(conn) 
+

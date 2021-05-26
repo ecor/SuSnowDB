@@ -383,7 +383,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   names(dwd_mes2)[names(dwd_mes2)=="ASH_6"] <- "snow_depth_sample_cm"
   
   measurement_types[nrow(measurement_types)+1,] <- c(variable_code0="sampled_swe_mm",variable="sampled snow pack water equivalent",unit="mm",description="sampled snow pack water equivalent DWD=WAAS_6")[names(measurement_types)]
-  names(measurements)[names(measurements)=="WAAS_6"] <- "sampled_swe_mm"
+  names(dwd_mes2)[names(dwd_mes2)=="WAAS_6"] <- "sampled_swe_mm"
   
   
   
