@@ -151,3 +151,6 @@ for (var in vars2) {
 ###write_dataset_into_ssdb(conn,val,new=TRUE)
 dbDisconnect(conn) 
 
+## CREARE UNA SIMULAZIONE CON SOLI SPOT NEI PUNTI DI MISURA!!! EE
+
+
