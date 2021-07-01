@@ -6,15 +6,20 @@ library(sf)
 library(dplyr)
 library(zoo)
 library(dygraphs)
+library(lubridate)
+library(reshape2)
+
 #####
-wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d'
+###wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d'
+##wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d_COPY_20210607/'
+wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d_COPY_20210614/'
 elevation  <- get.geotop.inpts.keyword.value("DemFile",raster=TRUE,wpath=wpath) 
 land  <- get.geotop.inpts.keyword.value("LandCoverMapFile",raster=TRUE,wpath=wpath) 
 #####
 tz <- "GMT"
 
 start <- as.Date("1998-08-01")
-end <- as.Date("2020-08-01")
+end <- as.Date("2020-08-01")-months(1)
 when <- seq(from=start,to=end,by=1)
 
 
@@ -98,6 +103,8 @@ measurements <- dbReadTable(conn, "measurements")  %>% dplyr::filter(location_co
 ##out <- right_join(measurements,sim2)
 nn <- intersect(names(sim2),names(measurements))
 out2 <- sim2[,nn] %>% rbind(measurements[,nn]) 
+out2$time <- as.Date(out2$time)
+
 ###out2 <- out2 %>% dplyr::filter(!is.na(out2$icell)) 
 
 istations_ids <- which(locations$location_code0 %in% unique(out2$location_code0))
@@ -146,11 +153,28 @@ for (var in vars2) {
 ##dd$snow_depth_cm[[13]]
 ##> 
 
-
 ## Create a new DB layout
 ###write_dataset_into_ssdb(conn,val,new=TRUE)
 dbDisconnect(conn) 
 
+
+
+
+## CONTROLLARE  dd$snow_depth_cm$DE_DWD_SNOW_05801
+
+
+
+
+
+
+
+
 ## CREARE UNA SIMULAZIONE CON SOLI SPOT NEI PUNTI DI MISURA!!! EE
 
+nn2 <- out2 %>% filter(variable_code0=="swe_mm") %>% filter(neigh=="observation" & !is.na(value))   %>% select(location_code0) %>% magrittr::extract2(1) %>% unique()
 
+fout3 <- function(x,...){x %>% select(time,value,neigh) %>% dcast(time ~ neigh) %>% return()}
+####out3 <- out2 %>% dplyr::select(location_code0,variable_code0,time,neigh,value) %>% dplyr::filter(variable_code0==vars[1]) %>% dplyr::group_by(location_code0,variable_code0) %>% group_modify(fout3) %>% ungroup()
+out3 <- out2 %>% dplyr::select(location_code0,variable_code0,time,neigh,value) %>% dplyr::group_by(location_code0,variable_code0) %>% group_modify(fout3) %>% ungroup()
+
+gg <- ggplot(out3 %>% filter(variable_code0==vars[1]) %>% mutate(month=factor(month(time))))+geom_point(mapping=aes(x=observation,y=`0`,group=month))+ facet_grid(. ~ month) ## facet_grid(rows= . ~ variable_code0)
