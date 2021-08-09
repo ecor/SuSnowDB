@@ -11,8 +11,9 @@ library(reshape2)
 
 #####
 ###wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d'
-##wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d_COPY_20210607/'
-wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d_COPY_20210614/'
+wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d_COPY_20210607/'
+wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d_COPY_20210702_WANI_SCF_1_0/'
+##wpath <- '/stablo/local/simulations/sumava_test009b_distr_temp_v2_1d_COPY_20210614/'
 elevation  <- get.geotop.inpts.keyword.value("DemFile",raster=TRUE,wpath=wpath) 
 land  <- get.geotop.inpts.keyword.value("LandCoverMapFile",raster=TRUE,wpath=wpath) 
 #####

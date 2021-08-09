@@ -1,0 +1,17 @@
+variable_code0,variable_smet_code,variable,unit,measurement_time_interval,description
+NA,P,Air Pressure,Pa,instantaneous,Air Pressure
+NA,TA,Temperature Air,degree_C,instantaneous,Temperature Air (warning: Unit is Kelvin for SMET files)
+NA,TSS,Temperature Snow Surface,degree_C,instantaneous,Temperature Snow Surface (warning: Unit is Kelvin for SMET files)
+NA,TSG,Temperature Surface Ground,degree_C,instantaneous,Temperature Surface Ground (warning: Unit is Kelvin for SMET files)
+NA,RH,Relative Humidity,%,instantaneous,Relative Humidity (between 0 and 1)
+NA,VW_MAX,MAX Maximum wind velocity,m/s,instantaneous,MAX Maximum wind velocity
+NA,VW,Velocity Wind,m/s,instantaneous,Velocity Wind
+NA,DW,Direction Wind,degrees_clockwise _and_north_being_zero_degrees,instantaneous,Direction Wind
+NA,ISWR,Incoming Short Wave Radiation,W/m2,instantaneous,Incoming Short Wave Radiation
+NA,OSWR,Reflected Short Wave Radiation,W/m2,instantaneous,Reflected Short Wave Radiation
+NA,ILWR,Incoming Long Wave Radiation,W/m2,instantaneous,Incoming Long Wave Radiation
+NA,OLWR,Outgoing Long Wave Radiation,W/m2,instantaneous,Outgoing Long Wave Radiation
+NA,PINT,Precipitation Intensity calculated as an average over the timestep,mm/hr,instantaneous,Precipitation Intensity calculated as an average over the timestep
+NA,PSUM,Precipitation accumulation calculated over the last hour,mm/hr,instantaneous,Precipitation accumulation calculated over the last hour
+NA,HS,Height of Snow,cm,instantaneous,Height of Snow (warning: Unit is meter for SMET files)
+NA,HN,Height of Fresh,cm,instantaneous,Height of Fresh (New) Snow (warning: Unit is meter for SMET files)

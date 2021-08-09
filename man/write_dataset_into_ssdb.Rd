@@ -38,7 +38,7 @@ dbname = "hydroclimatedb_ver03"
 conn = dbConnect(PostgreSQL(), dbname = dbname)
 
 ## Create a new DB layout
-write_dataset_into_ssdb(conn,dataset,new=TRUE)
+write_dataset_into_ssdb(conn,dataset=val,new=TRUE)
 dbDisconnect(conn) 
 }
 }

@@ -10,7 +10,7 @@ NULL
 #' 
 #' 
 #' @importFrom sf st_write
-#' @importFrom DBI dbWriteTable dbSendQuery
+#' @importFrom DBI dbWriteTable dbSendQuery dbReadTable
 #' @export
 #' @examples
 #' \dontrun{
@@ -21,7 +21,7 @@ NULL
 #' conn = dbConnect(PostgreSQL(), dbname = dbname)
 #' 
 #' ## Create a new DB layout
-#' write_dataset_into_ssdb(conn,dataset,new=TRUE)
+#' write_dataset_into_ssdb(conn,dataset=val,new=TRUE)
 #' dbDisconnect(conn) 
 #' }
 ##https://www.r-bloggers.com/2016/02/using-postgresql-in-r-a-quick-how-to/
