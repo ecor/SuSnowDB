@@ -4,8 +4,10 @@
 library(SuSnowDB)
 library(RPostgreSQL) 
 
-##source('~/activity/2021/local/SuSnowDB/R/add_locations_into_ssdb.R')
-##source('~/activity/2021/local/SuSnowDB/R/add_measurement_types_into_ssdb.R')
+source('~/activity/2021/local/SuSnowDB/R/add_locations_into_ssdb.R')
+source('~/activity/2021/local/SuSnowDB/R/add_measurement_types_into_ssdb.R')
+source('~/activity/2021/local/SuSnowDB/R/add_measurements_into_ssdb.R')
+
 
 dbname <- "hydroclimatedb_testing00"
 val <- sumava_snow_dataset()
@@ -27,8 +29,8 @@ dbDisconnect(conn)
 
 conn = dbConnect(PostgreSQL(), dbname = dbname)
 out <- list()
-out$locations <- st_read(conn,"locations") %>% filter(location_code0!="empty_code0")
+out$locations <- st_read(conn,"locations") ###%>% filter(location_code0!="empty_code0")
 out$measurement_types <- dbReadTable(conn,"measurement_types")
-out <- dbReadTable(conn,"measurements")
+out$measurements <- dbReadTable(conn,"measurements")
 dbDisconnect(conn)
 

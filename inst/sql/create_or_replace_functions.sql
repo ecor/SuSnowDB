@@ -90,7 +90,7 @@ AS $$
 BEGIN
  DELETE FROM measurements WHERE location_code0='placeholder';
  DELETE FROM locations WHERE location_code0='placeholder';
- DELETE FROM measurement_types WHERE location_code0='placeholder';
+ DELETE FROM measurement_types WHERE variable_code0='placeholder';
  RETURN 0;
 END;
 $$ LANGUAGE plpgsql;
