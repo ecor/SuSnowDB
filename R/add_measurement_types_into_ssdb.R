@@ -36,7 +36,7 @@ NULL
 #' }
 add_measurement_types_into_ssdb <- function (conn,measurement_types,new=FALSE,append=!new,sql_files=system.file("sql/create_or_replace_functions.sql",package="SuSnowDB"),
                                     warn=TRUE,err=!warn,
-                                    nn_measurement_types=c("variable_code0","variable","unit","description","measurement_time_interval"),...) {
+                                    nn_measurement_types=default_nn_measurement_types(),...) {
   
   
   if (new==TRUE) append <- FALSE;

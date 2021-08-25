@@ -36,10 +36,10 @@ NULL
 #' }
 add_locations_into_ssdb <- function (conn,locations,new=FALSE,append=!new,sql_files=system.file("sql/create_or_replace_functions.sql",package="SuSnowDB"),
                                     warn=TRUE,err=!warn,
-                                    nn_locations=c("location_code","location_code0","location_name","altitude" ,"city_name",             
-                                "country_code_iso_3166_1","country_code_iso_3166_2","country_name" ,"description","geometry",
-                                  "location_source" ,"location_url" ,"use_limitations"),...) {
-  
+                                    nn_locations=default_nn_locations(),...) {
+  ##### c("location_code","location_code0","location_name","altitude" ,"city_name",             
+  ##"country_code_iso_3166_1","country_code_iso_3166_2","country_name" ,"description","geometry",
+  ##"location_source" ,"location_url" ,"use_limitations")
   
   if (new==TRUE) append <- FALSE;
   

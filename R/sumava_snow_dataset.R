@@ -35,6 +35,7 @@ NULL
 #'  data_dir <- system.file("snow_extdata",package="SuSnowDB")
 #'  \dontrun{
 #'  out <- sumava_snow_dataset()
+#'  is_dataset(out)
 #'  }
 
 sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuSnowDB")){ ##'/home/ecor/activity/2021/local/SuSnowDB/inst/snow_extdata') { 

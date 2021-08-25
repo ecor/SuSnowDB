@@ -12,8 +12,7 @@ add_measurements_into_ssdb(
   sql_files = system.file("sql/create_or_replace_functions.sql", package = "SuSnowDB"),
   warn = TRUE,
   err = !warn,
-  nn_measurements = c("time", "value", "flag", "location_code0", "variable_code0",
-    "description"),
+  nn_measurements = default_nn_measurements(),
   ...
 )
 }

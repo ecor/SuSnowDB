@@ -25,6 +25,19 @@ add_locations_into_ssdb(conn,val_smet$locations,append=TRUE)
 add_measurement_types_into_ssdb(conn,val_smet$measurement_type,append=TRUE)
 add_measurements_into_ssdb(conn,val_smet$measurements,append=TRUE)
 
+
+### Add weather station from GSOD (https://catalog.data.gov/dataset/global-surface-summary-of-the-day-gsod#sec-dates) though GSODR package for the following contry: Senegal
+val_gsod <- gsodr_dataset(years=2010:2020,country="SN")
+##val_gsod <- meteotrentino_smet_dataset()
+add_locations_into_ssdb(conn,val_gsod$locations,append=TRUE)
+add_measurement_types_into_ssdb(conn,val_gsod$measurement_type,append=TRUE)
+add_measurements_into_ssdb(conn,val_gsod$measurements,append=TRUE)
+
+
+
+
+
+
 dbDisconnect(conn)
 
 conn = dbConnect(PostgreSQL(), dbname = dbname)
