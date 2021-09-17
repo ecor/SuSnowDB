@@ -1,7 +1,7 @@
 NULL
 #' Add measurements ("measurements" table) to a SumavaDB-like spatiotemporal database  
 #'
-#' @param conn database (preferrably PodtgresSQL) connection. See ouput of \code{\link{dbConnect}}.
+#' @param conn database (preferably PostgreSQL) connection. See output of \code{\link{dbConnect}}.
 #' @param measurements measurements table, data frame or an object that can be coerced to a data frame. See output of \code{\link{sumava_snow_dataset}}
 #' @param append logical. If \code{append==FALSE} database tables are created or replaced. If \code{append==FALSE} data and metedata are appended as new rows of the database tables. Default is \code{append=TRUE}.
 #' @param new logical. If \code{new==TRUE} database tables are created or replaced. If \code{new==FALSE} tables are modidied according to \code{append}. Default is \code{FALSE}.  

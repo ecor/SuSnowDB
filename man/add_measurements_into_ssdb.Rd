@@ -17,7 +17,7 @@ add_measurements_into_ssdb(
 )
 }
 \arguments{
-\item{conn}{database (preferrably PodtgresSQL) connection. See ouput of \code{\link{dbConnect}}.}
+\item{conn}{database (preferably PostgreSQL) connection. See output of \code{\link{dbConnect}}.}
 
 \item{measurements}{measurements table, data frame or an object that can be coerced to a data frame. See output of \code{\link{sumava_snow_dataset}}}
 

@@ -17,7 +17,7 @@ add_measurement_types_into_ssdb(
 )
 }
 \arguments{
-\item{conn}{database (preferrably PodtgresSQL) connection. See ouput of \code{\link{dbConnect}}.}
+\item{conn}{database (preferably PostgresSQL) connection. See output of \code{\link{dbConnect}}.}
 
 \item{measurement_types}{measurement types table, data frame or an object that can be coerced to a data frame.. See output of \code{\link{sumava_snow_dataset}}}
 

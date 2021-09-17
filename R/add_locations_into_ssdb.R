@@ -1,8 +1,8 @@
 NULL
 #' Add locations ("locations" table) to a SumavaDB-like spatiotemporal database  
 #'
-#' @param conn database (preferrably PodtgresSQL) connection. See ouput of \code{\link{dbConnect}}.
-#' @param locations locatiol, spatial object (or \code{\link{sf}}) . See output of \code{\link{sumava_snow_dataset}}
+#' @param conn database (preferably PostgreSQL) connection. See output of \code{\link{dbConnect}}.
+#' @param locations locations, spatial object (or \code{\link{sf}}) . See output of \code{\link{sumava_snow_dataset}}
 #' @param append logical. If \code{append==FALSE} database tables are created or replaced. If \code{append==FALSE} data and metedata are appended as new rows of the database tables. Default is \code{append=TRUE}.
 #' @param new logical. If \code{new==TRUE} database tables are created or replaced. If \code{new==FALSE} tables are modidied according to \code{append}. Default is \code{FALSE}.  
 #' @param sql_files file names containing database initialization SQL queries. They are used in case \code{append==FALSE} or \code{new=TRUE}.

@@ -17,9 +17,9 @@ add_locations_into_ssdb(
 )
 }
 \arguments{
-\item{conn}{database (preferrably PodtgresSQL) connection. See ouput of \code{\link{dbConnect}}.}
+\item{conn}{database (preferably PostgreSQL) connection. See output of \code{\link{dbConnect}}.}
 
-\item{locations}{locatiol, spatial object (or \code{\link{sf}}) . See output of \code{\link{sumava_snow_dataset}}}
+\item{locations}{locations, spatial object (or \code{\link{sf}}) . See output of \code{\link{sumava_snow_dataset}}}
 
 \item{new}{logical. If \code{new==TRUE} database tables are created or replaced. If \code{new==FALSE} tables are modidied according to \code{append}. Default is \code{FALSE}.}
 
