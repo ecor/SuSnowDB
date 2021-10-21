@@ -4,7 +4,7 @@ NULL
 #' @param conn database (preferably PostgresSQL) connection. See output of \code{\link{dbConnect}}.
 #' @param ... further arguments for \code{\link{dbReadTable}}
 #' 
-#'
+#' @importFrom dplyr tbl arrange
 #'
 #' @export
 #' 
