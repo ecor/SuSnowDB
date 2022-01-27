@@ -222,10 +222,10 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
     }
   }
   
-  NoteText <- "Measurement on Snow Height  (SCE) Unit: cm Start_of_Measurement:%s End_of_Measurement:%s"
+  NoteText <- "Measurement on Snow Height  (SCE) Unit: cm Start_of_Measurement:%s End_of_Measurement:%s Altitude: %s" ## EC 20220127
   metadata1 <- metadata %>% group_by(.data[["Station_ID"]]) %>% summarize(Station_name=rev(.data[["Station_name"]])[1],Altitude=rev(.data[["Altitude"]])[1],
                                                                           Note=sprintf(NoteText,paste(.data[["Start_of_measurement"]],collapse=";"),
-                                                                                       paste(.data[["End_of_measurement"]],"elev",.data[["Altitude"]],collapse=";")),region_iso_3166_2=.data[["region_iso_3166_2"]][1]) %>% ungroup()### DA FINIRE
+                                                                                       paste(.data[["End_of_measurement"]],collapse=";"),paste(as.character(.data[["Altitude"]]),collapse=";")),region_iso_3166_2=.data[["region_iso_3166_2"]][1]) %>% ungroup()### DA FINIRE
   ## EC 20220127
   metadata1$URL <- "https://www.chmi.cz/historicka-data/pocasi/denni-data/Denni-data-dle-z.-123-1998-Sb"
   metadata1$source <- "CHMI" 
