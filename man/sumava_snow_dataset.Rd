@@ -5,11 +5,14 @@
 \title{Create Sumava Snow Dataset from DWD and CHMI sources}
 \usage{
 sumava_snow_dataset(
-  data_dir = system.file("snow_extdata", package = "SuSnowDB")
+  data_dir = system.file("snow_extdata", package = "SuSnowDB"),
+  remove_multipoints = TRUE
 )
 }
 \arguments{
 \item{data_dir}{directory containing original CHMI and DWD snow data}
+
+\item{remove_multipoints}{logical. It splits station and related time series if a station has resulted in different (even if near) point sites in different time periods (e.g. some CHMI stations). DEfault is \code{TURE}.}
 }
 \description{
 Create Sumava Snow Dataset from DWD and CHMI sources
