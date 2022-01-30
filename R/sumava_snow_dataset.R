@@ -19,7 +19,8 @@ NULL
 #' Create Sumava Snow Dataset from DWD and CHMI sources
 #'
 #' @param data_dir directory containing original CHMI and DWD snow data
-#' 
+#' @param remove_multipoints logical. It splits station and related time series if a station has resulted in different (even if near) point sites in different time periods (e.g. some CHMI stations). DEfault is \code{TURE}.
+#'
 #' @importFrom stringr str_sub str_split str_replace str_trim 
 #' @importFrom utils unzip
 #' @importFrom purrr map
@@ -38,7 +39,7 @@ NULL
 #'  is_dataset(out)
 #'  }
 
-sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuSnowDB")){ ##'/home/ecor/activity/2021/local/SuSnowDB/inst/snow_extdata') { 
+sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuSnowDB"),remove_multipoints=TRUE){ ##'/home/ecor/activity/2021/local/SuSnowDB/inst/snow_extdata') { 
   
   ## DA COMPLETARE ... 
   if ((data_dir %>% str_sub(-1,-1))=="/") data_dir <- data_dir %>% str_sub(1,-2)
@@ -222,13 +223,15 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
     }
   }
   
-  NoteText <- "Measurement on Snow Height  (SCE) Unit: cm Start_of_Measurement:%s End_of_Measurement:%s Altitude: %s" ## EC 20220127
-  metadata1 <- metadata %>% group_by(.data[["Station_ID"]]) %>% summarize(Station_name=rev(.data[["Station_name"]])[1],Altitude=rev(.data[["Altitude"]])[1],
+  NoteText <- "Measurement on Snow Height  (SCE) Unit: cm Start_of_Measurement:%s End_of_Measurement:%s Longitude:%s Latitude:%s Altitude:%s" ## EC 20220127
+  metadata1 <- metadata %>% group_by(.data[["Station_ID"]]) %>% summarize(Station_name=rev(.data[["Station_name"]])[1],Altitude_L=rev(.data[["Altitude"]])[1],
                                                                           Note=sprintf(NoteText,paste(.data[["Start_of_measurement"]],collapse=";"),
-                                                                                       paste(.data[["End_of_measurement"]],collapse=";"),paste(as.character(.data[["Altitude"]]),collapse=";")),region_iso_3166_2=.data[["region_iso_3166_2"]][1]) %>% ungroup()### DA FINIRE
+                                                                                       paste(.data[["End_of_measurement"]],collapse=";"),paste(.data[["Longitude"]],collapse=";"),paste(.data[["Latitude"]],collapse=";"),paste(.data[["Altitude"]],collapse=";")),region_iso_3166_2=.data[["region_iso_3166_2"]][1]) %>% ungroup()### DA FINIRE
   ## EC 20220127
   metadata1$URL <- "https://www.chmi.cz/historicka-data/pocasi/denni-data/Denni-data-dle-z.-123-1998-Sb"
   metadata1$source <- "CHMI" 
+  names(metadata1)[names(metadata1)=="Altitude_L"] <- "Altitude" 
+  
   
   
   
@@ -430,5 +433,100 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   ##
   measurements <- rbind(measurements,measurements_bavaria) %>% as_tibble()
   ###
-  return(list(locations=locations,measurement_types=measurement_types,measurements=measurements))
+  
+  ####
+  sumava <- list(locations=locations,measurement_types=measurement_types,measurements=measurements)
+  
+  
+  if (remove_multipoints==TRUE) { ## addecd EC20220128
+    
+    is_multipoint <- sapply(sumava$locations$geometry,function(x){return((class(x)=="MULTIPOINT")[2])})
+    ##is_multipoint <- (sumava$locations$location_code0=="CZ_CHMI_SNOW_C1FILH01")
+    
+    for (im in which(is_multipoint)) {
+      
+      temp0  <- sumava$locations[im,]
+      location_code0_temp <- temp0$location_code0
+      temp1 <- temp0$description %>% str_split(" ") %>% unlist()
+      pattern <- c("Start_of_Measurement","End_of_Measurement","Longitude","Latitude","Altitude")
+      itemp1 <- temp1 %>% str_detect(pattern=pattern[1])
+      for (it in pattern[-1]) {
+        itemp1 <- (temp1 %>% str_detect(pattern=it)) | itemp1
+      }  
+      temp1 <- temp1[itemp1]
+      # temp1 <- temp1 %>% sapply(function(x,pattern,...) {x[any(str_detect(x,pattern=pattern,...))]},pattern=c("Start_of_Measurement","End_of_Measurement","Longitude","Latitude","Altitude"))
+      temp1 <- temp1 %>% str_split(":")
+      ndesc_temp <-  temp1 %>% sapply(function(x){x[1]})
+      temp1 <- temp1 %>% sapply(function(x){x[2]}) %>% str_split(";") 
+      temp1 <- temp1 %>% as.data.frame()
+      names(temp1) <-  ndesc_temp
+      
+      
+      
+      #####
+      
+      temp1$Start_of_Measurement <- as.Date(temp1$Start_of_Measurement)
+      temp1$End_of_Measurement   <- as.Date(temp1$End_of_Measurement)
+      temp1$Longitude <- as.numeric(temp1$Longitude)
+      temp1$Latitude <- as.numeric(temp1$Latitude)
+      temp1$Altitude <- as.numeric(temp1$Altitude)
+      #####
+      
+      
+      geoms <- temp1[,c("Longitude","Latitude")] %>% t() 
+      geoms <- geoms %>% as.data.frame() %>% as.list() 
+      geoms <- geoms %>% lapply(st_point) %>% st_sfc(crs=4326) %>% st_transform(crs=st_crs(temp0))
+      ### 
+      temp1$geometry <- geoms
+      temp1 <- temp1 %>% st_sf()
+      temp0 <- temp0[rep(1,nrow(temp1)),]
+      
+      ## ()
+      ##  temp1 <- 
+      
+      #####
+      
+      formatd <-"%Y%m%d"
+      temp0$geometry <- temp1$geometry
+      temp0$altitude <- temp1$Altitude
+      temp0$location_code0 <- paste(location_code0_temp,as.character(temp1$Start_of_Measurement,format=formatd),as.character(temp1$End_of_Measurement,format=formatd),sep="_")
+      for (i in 1:nrow(temp0)) {
+        
+        start_date <- temp1$Start_of_Measurement[i]
+        end_date   <- temp1$End_of_Measurement[i]
+        cond <- which((as.Date(sumava$measurements$time) >= start_date) & (as.Date(sumava$measurements$time) <= end_date) & (sumava$measurements$location_code0==location_code0_temp))
+        sumava$measurements$location_code0[cond] <- temp0$location_code0[i]
+      }
+      
+      sumava$locations <- rbind(sumava$locations,temp0)
+      
+      
+    }
+    
+    #is_multipoint2 <- (sapply(sumava$locations$geometry,function(x){return((class(x)=="MULTIPOINT")[2])}))
+    ##is_multipoint2 <- (sumava$locations$location_code0=="CZ_CHMI_SNOW_C1FILH01")
+    ##is_multipoint2 <- is_multipoint
+    #sumava$location$location_code0[is_multipoint2]
+    # 
+    ##cond2 <- which(!(sumava$location$location_code0[is_multipoint2] %in% unique(sumava$measurements$location_code0)))
+    ####
+    noNAcond <- which(!is.na(sumava$measurements$value))
+    sumava$measurements <- sumava$measurements[noNAcond,]
+    cond2 <- which(sumava$locations$location_code0 %in% unique(sumava$measurements$location_code0))
+    
+    if (length(cond2)>0) {
+      
+      sumava$locations <- sumava$locations[cond2,]
+      
+    }
+    
+    
+    ####
+    
+    
+    
+    
+  }
+  
+  return(sumava)
 }

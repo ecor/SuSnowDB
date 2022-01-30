@@ -6,7 +6,7 @@ Type: Package
 Author: Emanuele Cordano
 Description: Creation for a timescale/postgis geospatial database for climate data. An application with snow data of Bavarian Forest/Sumava National Parks Area is Presented. 
 Version: 0.0.3
-Date: 2022-01-27
+Date: 2022-01-30
 Repository: CRAN
 Depends:magrittr,dplyr,purrr,stringr,sf,reshape2,rdwd,RSMET
 Imports:  rlang,DBI,GSODR
