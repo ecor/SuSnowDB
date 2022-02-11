@@ -7,6 +7,7 @@ NULL
 #' @param start_time,end_time start and end time instants of the time interval in  which measurements are to be extrated.
 #' @param all logical. if it is \code{TRUE} all measurements (types) are extracted. Default is \code{FALSE} if something else is specified. 
 #' @param returns.data.frame logical. if it is \code{TRUE} function output is cated as a data frame. Default is \code{FALSE}. 
+#' @param table_name name of the table . Default is \code{"measurements"}
 #' @param ... further arguments for \code{\link{tbl}}
 #' 
 #'
@@ -40,7 +41,7 @@ NULL
 #' 
 #' }
 
-get_measurements_from_ssdb <- function (conn,all=FALSE,variables_code0=NULL,locations_code0=NULL,returns.data.frame=FALSE,start_time=NA,end_time=NA,...) {
+get_measurements_from_ssdb <- function (conn,all=FALSE,variables_code0=NULL,locations_code0=NULL,returns.data.frame=FALSE,start_time=NA,end_time=NA,table_name="measurements",...) {
 
   cval <- length(variables_code0)>0
   cloc <- length(locations_code0)>0
@@ -48,16 +49,16 @@ get_measurements_from_ssdb <- function (conn,all=FALSE,variables_code0=NULL,loca
   cany <-  cval | cloc
   all <- (all==FALSE) & (cany==FALSE)
   if (all) {
-    out <- tbl(conn,"measurements",...)
+    out <- tbl(conn,table_name,...)
   } else if (cboth==TRUE) {
   
-    out <- tbl(conn,"measurements") %>% filter(.data$variable_code0 %in% variables_code0,.data$location_code0 %in% locations_code0)
+    out <- tbl(conn,table_name) %>% filter(.data$variable_code0 %in% variables_code0,.data$location_code0 %in% locations_code0)
   }else if (cloc==TRUE) {
     
-    out <- tbl(conn,"measurements") %>% filter(.data$location_code0 %in% locations_code0)
+    out <- tbl(conn,table_name) %>% filter(.data$location_code0 %in% locations_code0)
   }  else if (cval==TRUE) {
     
-    out <- tbl(conn,"measurements") %>% filter(.data$variable_code0 %in% variables_code0) 
+    out <- tbl(conn,table_name) %>% filter(.data$variable_code0 %in% variables_code0) 
   }
   if (length(start_time)<1) start_time <- NA
   if (length(end_time)<1) end_time <- NA

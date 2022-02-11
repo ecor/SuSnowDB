@@ -5,8 +5,8 @@ Title: SuSnowDB: Geospatial Database for Climate Data
 Type: Package
 Author: Emanuele Cordano
 Description: Creation for a timescale/postgis geospatial database for climate data. An application with snow data of Bavarian Forest/Sumava National Parks Area is Presented. 
-Version: 0.0.3
-Date: 2022-01-30
+Version: 0.0.4
+Date: 2022-02-10
 Repository: CRAN
 Depends:magrittr,dplyr,purrr,stringr,sf,reshape2,rdwd,RSMET
 Imports:  rlang,DBI,GSODR
