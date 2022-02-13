@@ -29,9 +29,20 @@ NULL
 #' }
 get_locations_from_ssdb <- function (conn,...) {
 
- 
-  out <- st_read(conn,"locations",...)
-  
+  cc <- class(conn)
+  out <- NULL
+  if (class(conn)=="PostgreSQLConnection") {
+    out <- st_read(conn,"locations",...)
+  } else if (cc=="list") {
+    
+    out <- conn$locations
+  } else {
+    
+    msg <- sprintf("Object type %s not supported to extract locations!",cc)
+    stop(msg)
+    
+    
+  }
   return(out)
   
   

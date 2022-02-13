@@ -20,6 +20,11 @@ NULL
 #'  are_all_datasets(val,val2)
 #'  are_all_datasets(list(val,val2))
 #'  
+#'  
+
+## MAKE A METHOD is_ssbd ?? 
+
+
 is_dataset <- function (x,
                         nn_measurement_types=default_nn_measurement_types(),
                         nn_locations=default_nn_locations(),
