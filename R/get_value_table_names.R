@@ -38,11 +38,11 @@ NULL
 #' 
 #' 
 #' sumava <- sumava_snow_dataset()
-#' tnames_sumava <- get_value_table_names(sumava)
+#' tnames_sumava <- get_value_table_names_from_ssdb(sumava)
 #' }
 
 
-get_value_table_names <- function (ssdb,meta_table_names=c("locations","measurement_types"),value_table_names=NULL)  {
+get_value_table_names_from_ssdb <- function (ssdb,meta_table_names=c("locations","measurement_types"),value_table_names=NULL)  {
   
   if (length(value_table_names)==0) value_table_names <- NULL
   if (is.null(value_table_names)) value_table_names <- NA
