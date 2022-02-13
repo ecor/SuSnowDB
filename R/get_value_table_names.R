@@ -33,7 +33,7 @@ NULL
 #' time_interval <- as.Date(c("2021-03-01","2021-03-31"))
 #' out <- get_measurements_from_ssdb(conn,variables_code0=c("SMET_TA","SMET_PINT"),start_time=time_interval[1],end_time=time_interval[2])
 #' 
-#' tnames <- get_value_table_names(conn)
+#' tnames <- get_value_table_names_from_ssdb(conn)
 #' dbDisconnect(conn)
 #' 
 #' 
