@@ -12,6 +12,7 @@ get_measurements_from_ssdb(
   returns.data.frame = FALSE,
   start_time = NA,
   end_time = NA,
+  table_name = "measurements",
   ...
 )
 }
@@ -27,6 +28,8 @@ get_measurements_from_ssdb(
 \item{returns.data.frame}{logical. if it is \code{TRUE} function output is cated as a data frame. Default is \code{FALSE}.}
 
 \item{start_time, end_time}{start and end time instants of the time interval in  which measurements are to be extrated.}
+
+\item{table_name}{name of the table . Default is \code{"measurements"}}
 
 \item{...}{further arguments for \code{\link{tbl}}}
 }

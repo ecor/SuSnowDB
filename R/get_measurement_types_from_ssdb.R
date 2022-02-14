@@ -29,8 +29,8 @@ NULL
 get_measurement_types_from_ssdb <- function (conn,...) {
 
  
-  out <- dbReadTable(conn,"measurement_types",...)
-  
+##  out <- dbReadTable(conn,"measurement_types",...)
+  out <- tbl(conn,"measurement_types",...)
   return(out)
   
   
