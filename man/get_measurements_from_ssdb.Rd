@@ -6,18 +6,20 @@
 \usage{
 get_measurements_from_ssdb(
   conn,
+  table_name = "measurements",
   all = FALSE,
   variables_code0 = NULL,
   locations_code0 = NULL,
   returns.data.frame = FALSE,
   start_time = NA,
   end_time = NA,
-  table_name = "measurements",
   ...
 )
 }
 \arguments{
 \item{conn}{database (preferably PostgresSQL) connection. See output of \code{\link{dbConnect}}.}
+
+\item{table_name}{name of the table . Default is \code{"measurements"}}
 
 \item{all}{logical. if it is \code{TRUE} all measurements (types) are extracted. Default is \code{FALSE} if something else is specified.}
 
@@ -28,8 +30,6 @@ get_measurements_from_ssdb(
 \item{returns.data.frame}{logical. if it is \code{TRUE} function output is cated as a data frame. Default is \code{FALSE}.}
 
 \item{start_time, end_time}{start and end time instants of the time interval in  which measurements are to be extrated.}
-
-\item{table_name}{name of the table . Default is \code{"measurements"}}
 
 \item{...}{further arguments for \code{\link{tbl}}}
 }
