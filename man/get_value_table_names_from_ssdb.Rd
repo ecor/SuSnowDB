@@ -11,7 +11,7 @@ get_value_table_names_from_ssdb(
 )
 }
 \arguments{
-\item{ssdb}{spatio-temporal dataset or a connection (TO BE IMPLEMENTED)}
+\item{ssdb}{spatio-temporal dataset or a connection (IMPLEMENTED)}
 
 \item{meta_table_names}{names of the meta tables. Default is \code{c("locations","measurement_types")}.}
 

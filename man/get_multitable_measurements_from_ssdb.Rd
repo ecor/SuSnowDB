@@ -14,7 +14,7 @@ get_multitable_measurements_from_ssdb(
 \arguments{
 \item{conn}{database (preferably PostgresSQL) connection. See output of \code{\link{dbConnect}}.}
 
-\item{table_name}{vector with names of the tables . Default is \code{"measurements"}}
+\item{table_name}{vector with names of the tables . Default is \code{get_value_table_names_from_ssdb(conn)}. See also @seealso \code{\link{get_value_table_names_from_ssdb}}.}
 
 \item{...}{further arguments for \code{\link{get_measurements_from_ssdb}}}
 
@@ -63,13 +63,13 @@ locs <- get_locations_from_ssdb(ssdb)
 
 ilocations_filipova <- which(str_detect(locs$location_name,"Filipova"))
 locs[ilocations_filipova,]
-out3 <- get_multitable_measurements_from_ssdb(ssdb,locations_code0=locs$location_code0[ilocations_filipova][4])
-out4 <- get_multitable_measurements_from_ssdb(ssdb,locations_code0=locs$location_code0[ilocations_filipova][4],return.zoo=TRUE)
+out3 <- get_multitable_measurements_from_ssdb(ssdb,locations_code0=locs$location_code0[ilocations_filipova][2])
+out4 <- get_multitable_measurements_from_ssdb(ssdb,locations_code0=locs$location_code0[ilocations_filipova][2],return.zoo=TRUE)
 dygraph(out4[[1]][[1]]) \%>\% dyRangeSelector()
 
 out4_all <- get_multitable_measurements_from_ssdb(ssdb,locations_code0=locs$location_code0[ilocations_filipova],return.zoo=TRUE)
 str(out4_all$snow_depth_cm$CZ_CHMI_SNOW_C1FILH01_20040401_20070912)
-dygraph(out4_all$snow_depth_cm$CZ_CHMI_SNOW_C1FILH01_20040401_20070912) \%>\% dyRangeSelector()
+dygraph(out4_all$snow_depth_cm$CZ_CHMI_SNOW_C1FILH01_20070913_20191231) \%>\% dyRangeSelector()
 
 
 

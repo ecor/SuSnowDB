@@ -2,7 +2,7 @@ NULL
 #' Extract table names containing values
 #'
 #' 
-#' @param ssdb spatio-temporal dataset or a connection (TO BE IMPLEMENTED)
+#' @param ssdb spatio-temporal dataset or a connection (IMPLEMENTED)
 #' @param meta_table_names names of the meta tables. Default is \code{c("locations","measurement_types")}.
 #' @param value_table_names names of the meta table. Default is \code{NULL}. Ignored if it is \code{NULL}.
 #'   

@@ -6,13 +6,16 @@
 \usage{
 sumava_snow_dataset(
   data_dir = system.file("snow_extdata", package = "SuSnowDB"),
-  remove_multipoints = TRUE
+  remove_multipoints = TRUE,
+  snap_distance = 5
 )
 }
 \arguments{
 \item{data_dir}{directory containing original CHMI and DWD snow data}
 
 \item{remove_multipoints}{logical. It splits station and related time series if a station has resulted in different (even if near) point sites in different time periods (e.g. some CHMI stations). DEfault is \code{TURE}.}
+
+\item{snap_distance}{maximum distance  expressed  in meters between points for snapping. Default is 5.}
 }
 \description{
 Create Sumava Snow Dataset from DWD and CHMI sources

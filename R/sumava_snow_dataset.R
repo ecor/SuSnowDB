@@ -20,11 +20,13 @@ NULL
 #'
 #' @param data_dir directory containing original CHMI and DWD snow data
 #' @param remove_multipoints logical. It splits station and related time series if a station has resulted in different (even if near) point sites in different time periods (e.g. some CHMI stations). DEfault is \code{TURE}.
-#'
+#' @param snap_distance maximum distance  expressed  in meters between points for snapping. Default is 5.
+#' 
+#'     
 #' @importFrom stringr str_sub str_split str_replace str_trim 
 #' @importFrom utils unzip
 #' @importFrom purrr map
-#' @importFrom sf st_sf st_sfc  st_point
+#' @importFrom sf st_sf st_sfc  st_point st_distance
 #' @importFrom magrittr %>% extract2
 #' @importFrom dplyr group_by as_tibble select filter summarize ungroup
 #' @importFrom rdwd dataDWD selectDWD
@@ -39,7 +41,7 @@ NULL
 #'  is_dataset(out)
 #'  }
 
-sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuSnowDB"),remove_multipoints=TRUE){ ##'/home/ecor/activity/2021/local/SuSnowDB/inst/snow_extdata') { 
+sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuSnowDB"),remove_multipoints=TRUE,snap_distance=5){ ##'/home/ecor/activity/2021/local/SuSnowDB/inst/snow_extdata') { 
   
   ## DA COMPLETARE ... 
   if ((data_dir %>% str_sub(-1,-1))=="/") data_dir <- data_dir %>% str_sub(1,-2)
@@ -365,7 +367,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   ## Getting DWD data values 
   ##
   ## if errors: type > rdwd::updateRdwd()
-  dwd_mes0 <- locations %>% filter(.data[["country_code_iso_3166_2"]]=="DE-BY") %>% select(.data[["location_url"]]) %>% extract2(1) 
+  dwd_mes0 <- locations %>% filter(.data[["country_code_iso_3166_2"]]=="DE-BY") %>% dplyr::select(.data[["location_url"]]) %>% extract2(1) 
   dwd_mes1 <- dwd_mes0 %>% dataDWD(dir=dir,read=TRUE) ###
   dwd_mes2 <- dwd_mes1 %>% do.call(what="rbind")
   names(dwd_mes2)[names(dwd_mes2)=="STATIONS_ID"] <- "location_code0"
@@ -425,7 +427,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   ### ADD MEASURWNT TYPES
   measurement_types$measurement_time_interval <- "daily"
   ## c("sub-daily","hourly","continuous")
-  measurements_bavaria <- dwd_mes2 %>% select(-.data[["eor"]]) %>% melt(id=c("location_code0","time","flag"),na.rm=FALSE)
+  measurements_bavaria <- dwd_mes2 %>% dplyr::select(-.data[["eor"]]) %>% melt(id=c("location_code0","time","flag"),na.rm=FALSE)
   measurements_bavaria$description <- "https://opendata.dwd.de/climate_environment/CDC/observations_germany/climate/daily/water_equiv/historical/BESCHREIBUNG_obsgermany_climate_daily_water_equiv_historical_de.pdf"
   names(measurements_bavaria)[names(measurements_bavaria)=="variable"] <- "variable_code0"
   measurements_bavaria <- measurements_bavaria[,names(measurements)]
@@ -490,6 +492,31 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
       temp0$geometry <- temp1$geometry
       temp0$altitude <- temp1$Altitude
       temp0$location_code0 <- paste(location_code0_temp,as.character(temp1$Start_of_Measurement,format=formatd),as.character(temp1$End_of_Measurement,format=formatd),sep="_")
+      temp0$location_code1 <-  temp0$location_code0
+      #### POINTS CANNOT BE DUPLICATED
+      temp0$line <- 1:nrow(temp0)
+      mm <- st_distance(temp0)
+      
+      
+      if (nrow(temp0)>1) for (ii in 1:nrow(temp0)) {
+        if (temp0$line[ii]>=ii) {
+          
+          jj <- which(as.vector(mm[ii,])<=snap_distance)
+          dd <- temp0$line[ii]
+          temp0$line[jj] <- dd 
+          
+          
+        }
+        
+        
+        
+      }
+      #### END POINTS CANNOT BE DUPLICATED # 20220221
+   
+     
+      temp0$location_code0 <- temp0$location_code0[temp0$line]
+    
+      
       for (i in 1:nrow(temp0)) {
         
         start_date <- temp1$Start_of_Measurement[i]
@@ -497,7 +524,12 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
         cond <- which((as.Date(sumava$measurements$time) >= start_date) & (as.Date(sumava$measurements$time) <= end_date) & (sumava$measurements$location_code0==location_code0_temp))
         sumava$measurements$location_code0[cond] <- temp0$location_code0[i]
       }
+   
+      uulines <- unique(temp0$line)
+      temp0 <- temp0[unique(temp0$line),names(sumava$locations)]
       
+      str(temp0)
+      ####
       sumava$locations <- rbind(sumava$locations,temp0)
       
       
