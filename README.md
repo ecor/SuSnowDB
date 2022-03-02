@@ -1,6 +1,6 @@
-# SuSnowDB : Bavarian Forest / Sumava area Snow Observations source code
+# SuSnowDB : Bavarian Forest / Sumava area Snow Observations Database source code (R Packege / PostgreSQL Code)
 
-This is a data base contains based on 3 tables (see below). 
+This  database contains a schema with 3 tables (see below). 
 
 ## Tables 
 
