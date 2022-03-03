@@ -528,7 +528,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
       uulines <- unique(temp0$line)
       temp0 <- temp0[unique(temp0$line),names(sumava$locations)]
       
-      str(temp0)
+      #####str(temp0)
       ####
       sumava$locations <- rbind(sumava$locations,temp0)
       

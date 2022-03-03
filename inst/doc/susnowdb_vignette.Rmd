@@ -1,7 +1,20 @@
-# SuSnowDB : Bavarian Forest / Sumava area Snow Observations Database source code (R Packege / PostgreSQL Code)
+---
+title: "SuSnowDB Schema"
+author: "Emanuele Cordano"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
-This  database contains a schema with 3 tables (see below). 
-
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 ## Tables 
 
 ### Locations
@@ -40,28 +53,6 @@ This  database contains a schema with 3 tables (see below).
 * __description__:  textual description and notes of the measurement. 
 
 
-## Examples
 
-An example contains snow depth observations pulic access from : 
-
-* DWD : https://cdc.dwd.de/portal/ Terms of use: https://opendata.dwd.de/climate_environment/CDC/Terms_of_use.pdf
-* CHMI : https://www.chmi.cz/?l=en ( https://www.chmi.cz/historicka-data/pocasi/denni-data/Denni-data-dle-z.-123-1998-Sb# )
-
-
-
-
-
-## Installation 
-
-
-Package `SuSnowDB` can be installed through R console (currently) private repository):
-
-
-```
-remotes::install_github("ecor/SuSnowDB")
-```
-
-
-Date: 2022-02-23
 
 
