@@ -41,8 +41,15 @@ NULL
 #' 
 #' }
 
-get_measurements_from_ssdb <- function (conn,all=FALSE,variables_code0=NULL,locations_code0=NULL,returns.data.frame=FALSE,start_time=NA,end_time=NA,table_name="measurements",...) {
+get_measurements_from_ssdb <- function (conn,table_name="measurements",all=FALSE,variables_code0=NULL,locations_code0=NULL,returns.data.frame=FALSE,start_time=NA,end_time=NA,...) {
 
+  
+  if (length(table_name)>1) {
+    
+    msg <- sprintf("Table names more than one: %s (Please use get_multitable_measurements_table() function instead!)",paste(table_name,collapse=" "))
+    stop(msg)
+    
+  }
   cval <- length(variables_code0)>0
   cloc <- length(locations_code0)>0
   cboth <- cval & cloc
@@ -69,6 +76,8 @@ get_measurements_from_ssdb <- function (conn,all=FALSE,variables_code0=NULL,loca
   
   if (!is.logical(returns.data.frame)) returns.data.frame <- FALSE
   if (returns.data.frame) out <- as.data.frame(out)
+  ###
+  
   
   return(out)
   

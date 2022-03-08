@@ -1,6 +1,6 @@
-# SuSnowDB : Bavarian Forest / Sumava area Snow Observations source code
+# SuSnowDB : Bavarian Forest / Sumava area Snow Observations Database source code (R Packege / PostgreSQL Code)
 
-This is a data base contains based on 3 tables (see below). 
+This  database contains a schema with 3 tables (see below). 
 
 ## Tables 
 
@@ -54,7 +54,7 @@ An example contains snow depth observations pulic access from :
 ## Installation 
 
 
-Packege `SuSnowDB` can be installed through R console (currently) private repository):
+Package `SuSnowDB` can be installed through R console (currently) private repository):
 
 
 ```
@@ -62,6 +62,6 @@ remotes::install_github("ecor/SuSnowDB")
 ```
 
 
-Date: 2021-10-20
+Date: 2022-02-23
 
 
