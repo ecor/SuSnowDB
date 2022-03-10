@@ -8,9 +8,8 @@ Description: Creation for a timescale/postgis geospatial database for climate da
 Version: 0.0.7
 Date: 2022-02-23
 Repository: CRAN
-Depends:magrittr,dplyr,purrr,stringr,sf,reshape2,rdwd,RSMET,zoo
-Imports:  rlang,DBI,GSODR,methods
+Depends: magrittr,dplyr,purrr,stringr,sf,reshape2,rdwd,RSMET,zoo
+Imports: rlang,DBI,GSODR,methods
 Suggests: RPostgreSQL,readr,dygraphs,raster
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Encoding: UTF-8
-
