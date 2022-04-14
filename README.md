@@ -62,6 +62,6 @@ remotes::install_github("ecor/SuSnowDB")
 ```
 
 
-Date: 2022-02-23
+Date: 2022-02-26
 
 
