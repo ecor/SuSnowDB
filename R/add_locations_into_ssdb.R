@@ -45,11 +45,13 @@ add_locations_into_ssdb <- function (conn,locations,new=FALSE,append=!new,sql_fi
   
   if (append==FALSE)  {
     sql_commands <- sql_files %>% map(readLines) %>% unlist() %>% paste(collapse="\n")
-    dbSendQuery(conn,statement=sql_commands)
+    r0 <- dbGetQuery(conn,statement=sql_commands)
+    
    query_create_tables <-"SELECT create_or_replace_all_measurement_location_tables();"
    # query_create_tables <-"SELECT create_or_replace_locations();"
   #  "SELECT create_or_replace_measurements();"
-    dbSendQuery(conn,statement=query_create_tables)
+    r1 <- dbGetQuery(conn,statement=query_create_tables)
+   
   } else {
     ## GEOGRAPHIC CONTROL 
     locations_table <- st_read(conn,"locations")

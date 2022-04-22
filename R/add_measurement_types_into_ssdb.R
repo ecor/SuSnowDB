@@ -13,7 +13,7 @@ NULL
 #' 
 #'
 #' @importFrom  sf st_read st_crs st_transform
-#'
+#' @importFrom DBI dbWriteTable dbSendQuery dbReadTable dbGetQuery
 #' @export
 #' 
 #' @examples
@@ -54,7 +54,7 @@ add_measurement_types_into_ssdb <- function (conn,measurement_types,new=FALSE,ap
     nn_measurement_types <- measurement_types_table %>% names()
     i_already_existing_codes <- which(measurement_types$variable_code0 %in%  measurement_types_table$variable_code0)
     if (length(i_already_existing_codes)>0) {
-      msq <- sprintf("The variable_code0  %s are already present in the database and will not be added!",paste(measurement_types$location_code0[i_already_existing_codes],collapse=" "))
+      msg <- sprintf("The variable_code0  %s are already present in the database and will not be added!",paste(measurement_types$location_code0[i_already_existing_codes],collapse=" "))
       warning(msg)
       measurement_types <- measurement_types[-i_already_existing_codes,]
       

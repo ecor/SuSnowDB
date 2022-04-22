@@ -16,9 +16,9 @@ NULL
 #' library(magrittr)
 #' library(raster)
 #' 
-#' ssdb <- '/home/ecor/activity/2022/local/shiny/SuSnowApp/ext-data/sumava.rds' %>% readRDS()
+#' ssdb <- system.file('sumava_extdata/sumava.rds',package="SuSnowDB") %>% readRDS()
 #' 
-#' crop_ext <- '/home/ecor/activity/2021/local/SuSnowDB/inst/sumava_extdata/sumava_v2_extent.tif' %>% raster() 
+#' crop_ext <- system.file('sumava_extdata/sumava_v2_extent.tif',package="SuSnowDB")  %>% raster() 
 #' 
 #' ssdb_cropped <- crop_dataset_from_ssdb(ssdb,crop=crop_ext)
 #' 

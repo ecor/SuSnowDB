@@ -42,7 +42,8 @@ NULL
 #' 
 #' library(dygraphs)
 #' 
-#' ssdb <- '/home/ecor/activity/2022/local/shiny/SuSnowApp/ext-data/sumava.rds' %>% readRDS()
+#' ssdb <- system.file('sumava_extdata/sumava.rds',package="SuSnowDB") %>% readRDS()
+#' ####ssdb <- '/home/ecor/activity/2022/local/shiny/SuSnowApp/ext-data/sumava.rds' %>% readRDS()
 #' table_name <- get_value_table_names_from_ssdb(ssdb)
 #' out2 <- get_multitable_measurements_from_ssdb(ssdb)
 #' ## FIND A LOCATION

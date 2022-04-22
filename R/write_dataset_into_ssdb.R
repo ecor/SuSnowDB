@@ -10,7 +10,7 @@ NULL
 #' 
 #' 
 #' @importFrom sf st_write
-#' @importFrom DBI dbWriteTable dbSendQuery dbReadTable
+#' 
 #' @export
 #' @examples
 #' \dontrun{

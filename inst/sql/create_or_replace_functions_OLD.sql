@@ -64,17 +64,8 @@ BEGIN
     flag TEXT,
     description TEXT
   );
- --!! PERFORM create_distributed_hypertable('measurements', 'time','location_code0');
-  --!!PERFORM create_hypertable('measurements', 'time');
-  PERFORM create_hypertable('measurements', 'time', 'location_code0', 20); 
-  --!, partitioning_func => 'location_hash');
---!! https://docs.timescale.com/api/latest/hypertable/create_hypertable/#create-hypertable
+  PERFORM create_hypertable('measurements', 'time');
   INSERT INTO measurements (time,variable_code0, location_code0) VALUES ('2021-01-01 00:00:00+01','placeholder','placeholder');
- --!!!  https://docs.timescale.com/api/latest/hypertable/create_index/#create-index-transaction-per-chunk 
- --!!! CREATE INDEX ON measurements(time, location_code0) WITH (timescaledb.transaction_per_chunk);
- --!!! SELECT  add_reorder_policy('measurements','location_code0');
-
-  
   RETURN  0;
 END;
 $$ LANGUAGE plpgsql;
