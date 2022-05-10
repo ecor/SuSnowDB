@@ -93,7 +93,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 
---! remova emply placeholder on lmeasurements_types/mesurements/locations tables
+--! remova empty placeholder on lmeasurements_types/mesurements/locations tables
 CREATE OR REPLACE FUNCTION remove_placeholder() RETURNS integer
 AS $$ 
 BEGIN
@@ -104,5 +104,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+-- ! Add measurement
+CREATE OR REPLACE FUNCTION add_measurement (t TIMESTAMPTZ,variable_code0 TEXT ,location_code0 TEXT ,value FLOAT,flag TEXT,description TEXT) RETURNS integer
+AS $$ 
+BEGIN
+ INSERT INTO measurements(time,variable_code0, location_code0,value,flag,description) VALUES (t,variable_code0,location_code0,value,flag,description);
+ RETURN 0;
+END;
+$$ LANGUAGE plpgsql;
 
 

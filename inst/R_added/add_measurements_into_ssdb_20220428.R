@@ -42,11 +42,11 @@ NULL
 #' 
 #' }
 add_measurements_into_ssdb <- function (conn,measurements,new=FALSE,append=!new,sql_files=system.file("sql/create_or_replace_functions.sql",package="SuSnowDB"),
-                                          warn=TRUE,err=!warn,
-                                          nn_measurements=default_nn_measurements(),...) {
+                                    warn=TRUE,err=!warn,
+                                    nn_measurements=default_nn_measurements(),...) {
   
   
-  
+
   
   
   
@@ -130,12 +130,12 @@ add_measurements_into_ssdb <- function (conn,measurements,new=FALSE,append=!new,
     measurements <- measurements[-i_un_var,]
     
   }
-  
+ 
   
   o_measurements <- dbWriteTable(conn=conn,name="measurements",value=measurements,append=TRUE,row.names=FALSE)
   remove_placeholder <- dbSendQuery(conn,statement="SELECT remove_placeholder();")
-  ## o_measurements <- dbWriteTable(conn=conn,name="measurements",value=dataset$measurements,append=TRUE,row.names=FALSE)
-  ##  o_measurements <- dbWriteTable(conn=conn,name="measurements",value=dataset$measurements,append=TRUE,row.names=FALSE)
+ ## o_measurements <- dbWriteTable(conn=conn,name="measurements",value=dataset$measurements,append=TRUE,row.names=FALSE)
+ ##  o_measurements <- dbWriteTable(conn=conn,name="measurements",value=dataset$measurements,append=TRUE,row.names=FALSE)
   
   ##return(list(measurements=o_measurements,measurements=o_measurements,measurements=o_measurements))
   
