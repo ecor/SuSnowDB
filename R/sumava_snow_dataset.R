@@ -36,19 +36,20 @@ NULL
 #'@export
 #'@examples
 #'  data_dir <- system.file("snow_extdata",package="SuSnowDB")
-#'  \dontrun{
+#'  
 #'  out <- sumava_snow_dataset()
 #'  is_dataset(out)
-#'  }
+#'  
 
-sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuSnowDB"),remove_multipoints=TRUE,snap_distance=5){ ##'/home/ecor/activity/2021/local/SuSnowDB/inst/snow_extdata') { 
+sumava_snow_dataset <- function(data_dir=system.file("snow",package="SuSnowDB"),remove_multipoints=TRUE,snap_distance=5){ ##} ,dwd_download_snow_path=tempdir()){ ##'/home/ecor/activity/2021/local/SuSnowDB/inst/snow_extdata') { 
   
   ## DA COMPLETARE ... 
   if ((data_dir %>% str_sub(-1,-1))=="/") data_dir <- data_dir %>% str_sub(1,-2)
   
+  
   chmi_snow_path <- data_dir %>% paste0('/chmi/')
   dwd_snow_path <-  data_dir %>% paste0('/dwd/')
-  
+  ##dwd_download_snow_path <- tempdir()
   
   ## CHMI DATA
   regions <- c("chmi_pilsen","chmi_southern_bohemia") 
@@ -71,10 +72,10 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   metadata_l <- list()
   
   for (region in regions) {
-    print(region)
+    ##print(region)
     for (it in zips[[region]]) {
       
-      out <- it %>% unzip(exdir=exdir) %>% readLines() ##readLines(encoding = "Latin 3 (ISO-8859-3)")
+      out <- it %>% unzip(exdir=exdir) %>% readLines(encoding = "Latin 3 (ISO-8859-3)",warn=FALSE) ##readLines(encoding = "Latin 3 (ISO-8859-3)")
       Encoding(out) <- "latin1"
       hds <- c("PRVEK","DATA","METADATA","PØÍSTROJE")
       
@@ -209,7 +210,7 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
       metaout$End_of_measurement <- as.Date(metaout$End_of_measurement,format="%d.%m.%Y")
       metaout$Latitude <-  metaout$Latitude %>% str_replace(",",".") %>% as.numeric()
       metaout$Longitude <-  metaout$Longitude %>% str_replace(",",".") %>% as.numeric()
-      metaout$Altitude <- metaout$Altitude %>% as.numeric()
+      metaout$Altitude <- metaout$Altitude %>% as.numeric() %>% suppressWarnings()
       crs <- 4326 ## epsg 4326 crs applied
       geometry <- metaout[,c("Longitude","Latitude")] %>% t() %>% as.data.frame() %>% as.list() %>% lapply(st_point) %>% st_sfc()
       metaout <- st_sf(metaout,geometry=geometry,crs=crs) ## epsg 4326 crs applied
@@ -320,9 +321,10 @@ sumava_snow_dataset <- function(data_dir=system.file("snow_extdata",package="SuS
   measurements$description <- as.character(NA)
   #### ADD DATA DWD 
   ##library(rdwd)  
-  data(geoIndex)  
-  
-  
+  #data(rdwd:::geoIndex)  
+  #geoIndex <- system.file("data/geoIndex.rda",package="rdwd") %>% load() ##%>% get(envir=globalenv())
+  #system.file("data/geoIndex.rda",package="rdwd") %>% load()
+  data(geoIndex,package="rdwd")
   
   dir <- dwd_snow_path
   ###dir_gadm <- '/home/ecor/activity/2021/sumava/sumava_validation/data/gadm'

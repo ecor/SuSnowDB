@@ -11,14 +11,11 @@ meteotrentino_smet_dataset(
   country_name = "Italy",
   country_code_iso_3166_1 = "IT",
   country_code_iso_3166_2 = "IT-TN",
-  location_source = "MeteoTrentino",
-  location_url = "http://storico.meteotrentino.it/web.htm?ppbm=\%s&rs&1&df",
-  measurement_types = read.table(system.file("smet_extdata/smet_variables.csv", package
-    = "SuSnowDB"), header = TRUE, sep = ",", stringsAsFactors = FALSE),
- 
-    use_limitations = "https://dati.trentino.it/dataset/dati-recenti-delle-stazioni-meteo",
- 
-    location_description = "https://dati.trentino.it/dataset/dati-recenti-delle-stazioni-meteo",
+  location_source = meteotrentino_defaults("location_source"),
+  location_url = meteotrentino_defaults("location_url"),
+  measurement_types = meteotrentino_defaults("location_url"),
+  use_limitations = meteotrentino_defaults("use_limitations"),
+  location_description = meteotrentino_defaults("location_description"),
   ...
 )
 }

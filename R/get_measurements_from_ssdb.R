@@ -32,11 +32,15 @@ NULL
 #' conn = dbConnect(PostgreSQL(), dbname = dbname)
 #' out <- get_measurements_from_ssdb(conn)
 #' out <- get_measurements_from_ssdb(conn,locations_code0="IT-TN_T0179")
-#' out <- get_measurements_from_ssdb(conn,locations_code0="IT-TN_T0179",variables_code0=c("SMET_TA","SMET_PINT"))
-#' out <- get_measurements_from_ssdb(conn,variables_code0=c("SMET_TA","SMET_PINT"))
+#' out <- get_measurements_from_ssdb(conn,locations_code0="IT-TN_T0179",
+#' variables_code0=c("SMET_TA","SMET_PINT"))
+#' out <- get_measurements_from_ssdb(conn,
+#' variables_code0=c("SMET_TA","SMET_PINT"))
 #' 
 #' time_interval <- as.Date(c("2021-03-01","2021-03-31"))
-#' out <- get_measurements_from_ssdb(conn,variables_code0=c("SMET_TA","SMET_PINT"),start_time=time_interval[1],end_time=time_interval[2])
+#' out <- get_measurements_from_ssdb(conn,
+#' variables_code0=c("SMET_TA","SMET_PINT"),
+#' start_time=time_interval[1],end_time=time_interval[2])
 #' dbDisconnect(conn)
 #' 
 #' }

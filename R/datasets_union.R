@@ -16,9 +16,12 @@ NULL
 #' @export
 #' @examples
 #'  library(readr)
-#'  x <- system.file("west_africa_gsod_extdata/gsod_bf_v2.csv",package="SuSnowDB") %>% read_csv() %>% gsodr_dataset()
-#'  y <- system.file("west_africa_gsod_extdata/gsod_ml.csv",package="SuSnowDB") %>% read_csv() %>% gsodr_dataset()
-#'  z <- system.file("west_africa_gsod_extdata/gsod_sn.csv",package="SuSnowDB") %>% read_csv() %>% gsodr_dataset()
+#'  x <- system.file("west_africa_gsod_extdata/gsod_bf_v2.csv",package="SuSnowDB") 
+#'  x <- x %>% read_csv() %>% gsodr_dataset()
+#'  y <- system.file("west_africa_gsod_extdata/gsod_ml.csv",package="SuSnowDB") 
+#'  y <- y %>% read_csv() %>% gsodr_dataset()
+#'  z <- system.file("west_africa_gsod_extdata/gsod_sn.csv",package="SuSnowDB") 
+#'  z <- z %>% read_csv() %>% gsodr_dataset()
 #' 
 #'  out <- datasets_union(x,y,z)
 #'  

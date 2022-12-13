@@ -28,11 +28,15 @@ NULL
 #' conn = dbConnect(PostgreSQL(), dbname = dbname)
 #' out <- get_measurements_from_ssdb(conn)
 #' out <- get_measurements_from_ssdb(conn,locations_code0="IT-TN_T0179")
-#' out <- get_measurements_from_ssdb(conn,locations_code0="IT-TN_T0179",variables_code0=c("SMET_TA","SMET_PINT"))
-#' out <- get_measurements_from_ssdb(conn,variables_code0=c("SMET_TA","SMET_PINT"))
+#' out <- get_measurements_from_ssdb(conn,locations_code0="IT-TN_T0179",
+#' variables_code0=c("SMET_TA","SMET_PINT"))
+#' out <- get_measurements_from_ssdb(conn,
+#' variables_code0=c("SMET_TA","SMET_PINT"))
 #' 
 #' time_interval <- as.Date(c("2021-03-01","2021-03-31"))
-#' out <- get_multitable_measurements_from_ssdb(conn,variables_code0=c("SMET_TA","SMET_PINT"),start_time=time_interval[1],end_time=time_interval[2])
+#' out <- get_multitable_measurements_from_ssdb(conn,
+#' variables_code0=c("SMET_TA","SMET_PINT"),
+#' start_time=time_interval[1],end_time=time_interval[2])
 #' dbDisconnect(conn)
 #' 
 #' 
@@ -51,11 +55,14 @@ NULL
 #' 
 #' ilocations_filipova <- which(str_detect(locs$location_name,"Filipova"))
 #' locs[ilocations_filipova,]
-#' out3 <- get_multitable_measurements_from_ssdb(ssdb,locations_code0=locs$location_code0[ilocations_filipova][2])
-#' out4 <- get_multitable_measurements_from_ssdb(ssdb,locations_code0=locs$location_code0[ilocations_filipova][2],return.zoo=TRUE)
+#' out3 <- get_multitable_measurements_from_ssdb(ssdb,
+#' locations_code0=locs$location_code0[ilocations_filipova][2])
+#' out4 <- get_multitable_measurements_from_ssdb(ssdb,
+#' locations_code0=locs$location_code0[ilocations_filipova][2],return.zoo=TRUE)
 #' dygraph(out4[[1]][[1]]) %>% dyRangeSelector()
 #' 
-#' out4_all <- get_multitable_measurements_from_ssdb(ssdb,locations_code0=locs$location_code0[ilocations_filipova],return.zoo=TRUE)
+#' out4_all <- get_multitable_measurements_from_ssdb(ssdb,
+#' locations_code0=locs$location_code0[ilocations_filipova],return.zoo=TRUE)
 #' str(out4_all$snow_depth_cm$CZ_CHMI_SNOW_C1FILH01_20040401_20070912)
 #' dygraph(out4_all$snow_depth_cm$CZ_CHMI_SNOW_C1FILH01_20070913_20191231) %>% dyRangeSelector()
 #' 
